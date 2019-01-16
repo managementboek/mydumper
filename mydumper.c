@@ -1673,7 +1673,7 @@ gboolean detect_generated_fields(MYSQL *conn, char *database, char *table){
 
 	gboolean result = FALSE;
 
-	gchar *query = g_strdup_printf("select COLUMN_NAME from information_schema.COLUMNS where TABLE_SCHEMA='%s' and TABLE_NAME='%s' and extra like '%%GENERATED%%'", database, table);
+	gchar *query = g_strdup_printf("select COLUMN_NAME from information_schema.COLUMNS where TABLE_SCHEMA='%s' and TABLE_NAME='%s' and ( extra like '%%GENERATED%%' OR extra like '%%VIRTUAL%%' )", database, table);
 	mysql_query(conn,query);
 	g_free(query);
 
@@ -1693,7 +1693,7 @@ GString * get_insertable_fields(MYSQL *conn, char *database, char *table){
 
 	GString *field_list = g_string_new("");
 
-	gchar *query = g_strdup_printf("select COLUMN_NAME from information_schema.COLUMNS where TABLE_SCHEMA='%s' and TABLE_NAME='%s' and extra not like '%%GENERATED%%'", database, table);
+	gchar *query = g_strdup_printf("select COLUMN_NAME from information_schema.COLUMNS where TABLE_SCHEMA='%s' and TABLE_NAME='%s' and not ( extra like '%%GENERATED%%' OR extra like '%%VIRTUAL%%' )", database, table);
 	mysql_query(conn,query);
 	g_free(query);
 
